@@ -1,7 +1,9 @@
 import httpx
 
-OLLAMA_URL = "http://localhost:11434/api/generate"
-MODEL_NAME = "qwen2.5:3b"
+from app.core.config import settings
+
+OLLAMA_URL = f"{settings.ollama_url}/api/generate"
+MODEL_NAME = settings.ollama_model
 
 async def ask_llm(prompt: str):
     async with httpx.AsyncClient(timeout=60) as client:

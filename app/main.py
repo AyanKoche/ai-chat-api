@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 
 from app.routes.chat import router as chat_router
+from app.core.config import settings
 
 app = FastAPI(
-    title="AI Chat API",
-    version="1.0.0",
-    description="A production-style AI backend built with FastAPI and Ollama."
+    title=settings.app_name,
+    version=settings.app_version,
 )
 
 app.include_router(chat_router)
