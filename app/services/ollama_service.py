@@ -1,13 +1,14 @@
 import httpx
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
+MODEL_NAME = "qwen2.5:3b"
 
 async def ask_llm(prompt: str):
     async with httpx.AsyncClient(timeout=60) as client:
         response = await client.post(
             OLLAMA_URL,
             json={
-                "model": "qwen2.5:3b",
+                "model": MODEL_NAME,
                 "prompt": prompt,
                 "stream": False,
             },
