@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from app.routes.chat import router as chat_router
 from app.core.config import settings
+from app.core.logging import logger
 
 app = FastAPI(
     title=settings.app_name,
@@ -12,9 +13,11 @@ app.include_router(chat_router)
 
 @app.get("/")
 async def root():
+    logger.info("Root endpoint accessed")
     return {"message": "Welcome to the AI Chat API!"}
 
 
 @app.get("/health")
 async def health_check():
+    logger.info("Health check endpoint accessed")
     return {"status": "healthy"}
