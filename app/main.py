@@ -22,7 +22,11 @@ async def root():
 @app.get("/health")
 async def health_check():
     logger.info("Health check endpoint accessed")
-    return {"status": "healthy"}
+    return {
+        "status": "healthy",
+        "service": "AI Chat API",
+        "default_model": settings.ollama_model,
+        }
 
 @app.exception_handler(OllamaConnectionError)
 async def handle_connection_error(request: Request, exc: OllamaConnectionError):
