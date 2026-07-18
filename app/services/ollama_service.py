@@ -7,14 +7,14 @@ from app.exceptions.ollama import OllamaConnectionError, OllamaResponseError
 OLLAMA_URL = f"{settings.ollama_url}/api/generate"
 MODEL_NAME = settings.ollama_model
 
-async def ask_llm(prompt: str):
+async def chat(message: str):
     try:
         async with httpx.AsyncClient(timeout=60) as client:
             response = await client.post(
                 OLLAMA_URL,
                 json={
                     "model": MODEL_NAME,
-                    "prompt": prompt,
+                    "message": message,
                     "stream": False,
                 },
                 timeout=60,
@@ -32,3 +32,19 @@ async def ask_llm(prompt: str):
     data = response.json()
     logger.info(f"LLM response: {data['response']}")
     return data["response"]
+
+async def stream_chat(message: str):
+    async with httpx.AsyncClient(timeout=None) as client:
+        async with client.stream(
+            "POST",
+            f"{settings.ollama_url}/api/chat",
+            json={
+                "model": settings.ollama_model,
+                "messages": [{"role": "user", "content": message}],
+                "stream": True,
+            },
+        ) as response:
+            response.raise_for_status()
+            async for line in response.aiter_text():
+                if line:
+                    yield line +"\n"
